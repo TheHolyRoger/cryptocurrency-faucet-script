@@ -31,11 +31,11 @@ SOFTWARE.
 
 $config = array(
     
-    // e.g. Dogecoin
-    "coinname" => "Coinname",
+    // e.g. TheHolyRogerCoin
+    "coinname" => "TheHolyRogerCoin",
     
 	// RPC settings:
-	// These are the settings you put into e.g. dogecoin.conf. They allow the faucet to interact with your wallet
+	// These are the settings you put into e.g. theholyroger.conf. They allow the faucet to interact with your wallet
     "rpc_user" => "rpcuser",
 	"rpc_password" => "rpcpassword",
 	"rpc_host" => "rpchost",
@@ -98,12 +98,16 @@ $config = array(
 	"wallet_passphrase" => "",
 
 	// Donation address:
-	"donation_address" => "DTiUqjQTXwgZfvcTcdoabp7uLezK47TPkN", // donation address to display
+	"donation_address" => "RogseRve5vPxMrBKVA72FvhPYUKFEQqc1w", // donation address to display
+
+	// Paper address generator link:
+	"paper_address_link" => "https://address.theholyroger.com/", // Paper address generator link
 
 	// Faucet look and feel:
 	"title" => "Cryptocurrency faucet script", // page title, may be used by the template too
 	"template" => "default", // template to use (see the templates directory)
     //code for advertisements:
+    "ads_title" => "Advertisements",
     "ads" => "<iframe></iframe>"
 	);
 

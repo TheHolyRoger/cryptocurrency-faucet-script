@@ -3,15 +3,14 @@
 <head>
     
 	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-	<meta name="author" content="Cryptocurrency faucet script" />
+	<meta name="author" content="The Holy Roger Coin (ROGER) faucet" />
 	
-    <!-- Default CSS -->
-    <link rel="stylesheet" href="./css/default.css" type="text/css" />
-    
     <!-- Bootstrap CDN Minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <!-- Bootstrap CDN Minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <!-- Default CSS -->
+    <link rel="stylesheet" href="./css/default.css?edit200621" type="text/css" />
     
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -38,16 +37,25 @@
 
 <div id="wrapper" class="container">
 
-<h2>{{TITLE}}</h2>
+<header>
+    <h2>{{TITLE}}</h2>
+</header>
 
+<?php
+    if (strlen($this->config["ads"]) > 17)
+    {
+?>
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h3 class="panel-title">Advertisements</h3>
+        <h3 class="panel-title">{{ADS_TITLE}}</h3>
     </div>
     <div class="panel-body">
         {{ADS}}
     </div>
 </div>
+<?php
+    }
+?>
 <div class="panel panel-default">
     <div class="panel-heading">
         <h3 class="panel-title">Faucet stats</h3>
@@ -62,7 +70,9 @@
         How many payments are left before they are executed: <span class="highlight" >{{STAGED_PAYMENTS_LEFT}}</span> payments.<br/>
       
         Payments will be done after <span class="highlight" >{{STAGED_PAYMENT_THRESHOLD}}</span> staged payments or automated hourly.<br/><br/>
-        You can get free {{COINNAME}} every hour.
+        You can get free {{COINNAME}} every hour.<br/><br/>
+
+        You can get a {{COINNAME}} address here: <a href="{{PAPER_ADDRESS_LINK}}" target="_blank">{{PAPER_ADDRESS_LINK_TEXT}}</a>
   </div>
 </div>
             
@@ -177,25 +187,25 @@
     <?php
 	break;
             case SF_STATUS_CAPTCHA_INCORRECT:
-            case SF_STATUS_INVALID_DOGE_ADDRESS:
+            case SF_STATUS_INVALID_ROGER_ADDRESS:
             case SF_STATUS_OPERATIONAL:
 	?>
     
     <form method="post" action="">
         <div class="input-group input-group-sm">
             <span class="input-group-addon">{{COINNAME}} address</span>
-            <input  name="dogecoin_address" type="text" class="form-control" value="" placeholder="Enter your {{COINNAME}} address here" />
+            <input  name="roger_address" type="text" class="form-control" value="" placeholder="Enter your {{COINNAME}} address here" />
         </div>
         <div class="input-group input-group-sm margintop">
             <span class="input-group-addon">Promo code</span>
             <input name="promo_code" type="text" value="" class="form-control" placeholder="Promo code (optional)" />
         </div>
         <div class="margintop" id="captcha">{{CAPTCHA}}</div>
-        <input id="send" name="dogecoin_submit" type="submit" class="btn btn-warning btn-md margintop" value="Send {{COINNAME}}" />
+        <input id="send" name="roger_submit" type="submit" class="btn btn-warning btn-md margintop" value="Send {{COINNAME}}" />
     </form>
     
 	<?php
-        if ($this->status() == SF_STATUS_INVALID_DOGE_ADDRESS)
+        if ($this->status() == SF_STATUS_INVALID_ROGER_ADDRESS)
         {
     ?>
     <div class="panel panel-default margintop">

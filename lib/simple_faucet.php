@@ -31,7 +31,7 @@ class simple_faucet
 			define("SF_STATUS_RPC_CONNECTION_FAILED",200);
 			define("SF_STATUS_MYSQL_CONNECTION_FAILED",201);
 			define("SF_STATUS_PAYOUT_DENIED",202);
-			define("SF_STATUS_INVALID_DOGE_ADDRESS",203);
+			define("SF_STATUS_INVALID_ROGER_ADDRESS",203);
 			define("SF_STATUS_PAYOUT_ERROR",204);
 			define("SF_STATUS_CAPTCHA_INCORRECT",205);
 			define("SF_STATUS_DRY_FAUCET",206);
@@ -51,8 +51,8 @@ class simple_faucet
 			"captcha_config" => array(),
 			"use_promo_codes" => true,
 			"mysql_table_prefix" => "sf_",
-			"donation_address" => "DTiUqjQTXwgZfvcTcdoabp7uLezK47TPkN ",
-			"title" => "DOGE Faucet",
+			"donation_address" => "RogseRve5vPxMrBKVA72FvhPYUKFEQqc1w",
+			"title" => "ROGER Faucet",
 			"template" => "default",
 			"stage_payments" => false,
 			"stage_payment_account_name" => "account",
@@ -63,7 +63,7 @@ class simple_faucet
 
 			);
 		$this->config = array_merge($defaults,$config);
-		if ($this->config["user_check"] != "ip_address" && $this->config["user_check"] != "doge_address")
+		if ($this->config["user_check"] != "ip_address" && $this->config["user_check"] != "coin_address")
 			$this->config["user_check"] = "both";
 
 		if ($this->config["captcha"] == "recaptcha")
@@ -87,7 +87,7 @@ class simple_faucet
 						{
 						$this->status = SF_STATUS_OPERATIONAL;
 
-						if (isset($_POST["dogecoin_address"]) && (($this->config["use_captcha"] && $this->valid_captcha()) || !$this->config["use_captcha"]))
+						if (isset($_POST["roger_address"]) && (($this->config["use_captcha"] && $this->valid_captcha()) || !$this->config["use_captcha"]))
 							{
 							if ($this->config["filter_proxies"] && class_exists("proxy_filter"))
 								{
@@ -99,8 +99,8 @@ class simple_faucet
 									}
 								}
 
-							$dogecoin_address = $_POST["dogecoin_address"];
-							$validation = $this->rpc("validateaddress",array($dogecoin_address));
+							$roger_address = $_POST["roger_address"];
+							$validation = $this->rpc("validateaddress",array($roger_address));
 							if ($validation["isvalid"])
 								{
 								$interval = "7 HOUR"; // hardcoded default interval if the custom interval is messed up
@@ -125,8 +125,8 @@ class simple_faucet
 								$user_check = " AND (";
 								if ($this->config["user_check"] == "ip_address" || $this->config["user_check"] == "both")
 									$user_check .= " `ip_address` = '".$this->db->escape_string($_SERVER["REMOTE_ADDR"])."'";
-								if ($this->config["user_check"] == "doge_address" || $this->config["user_check"] == "both")
-									$user_check .= ($this->config["user_check"] == "both"?" OR":"")." `payout_address` = '".$this->db->escape_string($dogecoin_address)."'";
+								if ($this->config["user_check"] == "coin_address" || $this->config["user_check"] == "both")
+									$user_check .= ($this->config["user_check"] == "both"?" OR":"")." `payout_address` = '".$this->db->escape_string($roger_address)."'";
 								$user_check .= ")";
 								$result = $this->db->query("SELECT `id` FROM `".$this->db->escape_string($this->config["mysql_table_prefix"])."payouts` WHERE `timestamp` > NOW() - INTERVAL ".$interval.$user_check);
 								if ($row = @$result->fetch_assoc())
@@ -149,15 +149,15 @@ class simple_faucet
 													$this->promo_payout_amount = $promo["maximum_payout"];
 												else
 													$this->promo_payout_amount = $this->float_rand($promo["minimum_payout"],$promo["maximum_payout"]);
-													//$this->promo_payout_amount = mt_rand($promo["minimum_payout"]*10000,$promo["maximum_payout"]*10000)/10000; // calculate a random promo DOGE amount
+													//$this->promo_payout_amount = mt_rand($promo["minimum_payout"]*10000,$promo["maximum_payout"]*10000)/10000; // calculate a random promo ROGER amount
 												if ($promo["uses"] > 0)
 													$this->db->query("UPDATE `".$this->config["mysql_table_prefix"]."promo_codes` SET `uses` = `uses`-1 WHERE `code` = '".$this->db->escape_string($promo_code)."'");
 												}
 											}
 										}
-									//$this->payout_amount = mt_rand($this->config["minimum_payout"]*10000,$this->config["maximum_payout"]*10000)/10000; // calculate a random DOGE amount
+									//$this->payout_amount = mt_rand($this->config["minimum_payout"]*10000,$this->config["maximum_payout"]*10000)/10000; // calculate a random ROGER amount
 									$this->payout_amount = $this->float_rand($this->config["minimum_payout"],$this->config["maximum_payout"]);
-									$this->db->query("INSERT INTO `".$this->db->escape_string($this->config["mysql_table_prefix"])."payouts` (`payout_amount`,`ip_address`,`payout_address`,`promo_code`,`promo_payout_amount`,`timestamp`) VALUES ('".$this->payout_amount."','".$this->db->escape_string($_SERVER["REMOTE_ADDR"])."','".$this->db->escape_string($dogecoin_address)."','".$this->db->escape_string($promo_code)."','".$this->promo_payout_amount."',NOW())"); // insert the transaction into the payout log
+									$this->db->query("INSERT INTO `".$this->db->escape_string($this->config["mysql_table_prefix"])."payouts` (`payout_amount`,`ip_address`,`payout_address`,`promo_code`,`promo_payout_amount`,`timestamp`) VALUES ('".$this->payout_amount."','".$this->db->escape_string($_SERVER["REMOTE_ADDR"])."','".$this->db->escape_string($roger_address)."','".$this->db->escape_string($promo_code)."','".$this->promo_payout_amount."',NOW())"); // insert the transaction into the payout log
 
 									if ($this->config["wallet_passphrase"] != "")
 										$this->rpc("walletpassphrase",array($this->config["wallet_passphrase"],5)); // unlock wallet
@@ -167,9 +167,9 @@ class simple_faucet
 									else
 										{
 										if ($this->config["stage_payments"])
-											$this->status = $this->stage_payment($dogecoin_address,($this->payout_amount+$this->promo_payout_amount)) ? $this->promo_payout_amount>0 ? SF_STATUS_PAYOUT_AND_PROMO_ACCEPTED : SF_STATUS_PAYOUT_ACCEPTED : SF_STATUS_PAYOUT_ERROR; // stage the DOGE;
+											$this->status = $this->stage_payment($roger_address,($this->payout_amount+$this->promo_payout_amount)) ? $this->promo_payout_amount>0 ? SF_STATUS_PAYOUT_AND_PROMO_ACCEPTED : SF_STATUS_PAYOUT_ACCEPTED : SF_STATUS_PAYOUT_ERROR; // stage the ROGER;
 										else
-											$this->status = !is_null($this->rpc("sendtoaddress",array($dogecoin_address, ($this->payout_amount+$this->promo_payout_amount) ))) ? $this->promo_payout_amount>0 ? SF_STATUS_PAYOUT_AND_PROMO_ACCEPTED : SF_STATUS_PAYOUT_ACCEPTED : SF_STATUS_PAYOUT_ERROR; // send the DOGE
+											$this->status = !is_null($this->rpc("sendtoaddress",array($roger_address, ($this->payout_amount+$this->promo_payout_amount) ))) ? $this->promo_payout_amount>0 ? SF_STATUS_PAYOUT_AND_PROMO_ACCEPTED : SF_STATUS_PAYOUT_ACCEPTED : SF_STATUS_PAYOUT_ERROR; // send the ROGER
 										}
 									
 									if ($this->config["wallet_passphrase"] != "")
@@ -177,11 +177,11 @@ class simple_faucet
 									}
 								}
 							else
-								$this->status = SF_STATUS_INVALID_DOGE_ADDRESS;
+								$this->status = SF_STATUS_INVALID_ROGER_ADDRESS;
 							}
 						else
 							{
-							if (isset($_POST["dogecoin_address"]))
+							if (isset($_POST["roger_address"]))
 								$this->status = SF_STATUS_CAPTCHA_INCORRECT;
 							}
 						}
@@ -284,6 +284,15 @@ class simple_faucet
 
 				case "staged_payment_threshold":
 					return $config["staged_payment_threshold"];
+                                
+                case "ads_title":
+	               return $config["ads_title"];
+                                
+                case "paper_address_link":
+	               return $config["paper_address_link"];
+                                
+                case "paper_address_link_text":
+	               return explode("/", $config["paper_address_link"])[2];
 
 				// current user information:
 				case "payout_amount":
@@ -342,7 +351,7 @@ class simple_faucet
 			if ($result = $this->db->query("SELECT ".$this->db->escape_string($function)."(`payout_amount`) FROM `".$this->db->escape_string($this->config["mysql_table_prefix"])."payouts`"))
 				{
 				$row = $result->fetch_array(MYSQLI_NUM);
-				return is_float($row[0]) ? number_format($row[0],6) : $row[0];
+				return (fmod($row[0],1) !== 0.0) ? number_format($row[0],6) : $row[0];
 				}
 			}
 		return false;

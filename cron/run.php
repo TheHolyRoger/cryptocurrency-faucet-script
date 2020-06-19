@@ -1,5 +1,6 @@
 <?php
     define("SIMPLE_FAUCET",true);
+    chdir(dirname(__FILE__));
     chdir("..");
     require_once('./lib/jsonRPCClient.php');
     require_once('./lib/simple_faucet.php');

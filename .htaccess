@@ -1,0 +1,10 @@
+<Files ~ "^.*\.([Hh][Tt][Aa])">
+	Order allow,deny
+	Deny from all
+	Satisfy all
+</Files>
+
+<FilesMatch "LICENSE|README\.md|faucet\.sql|config\.sample\.php|config\.php|function\.php|include\.php">
+	Order allow,deny
+	Deny from all
+</FilesMatch>
