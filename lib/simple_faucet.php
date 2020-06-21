@@ -348,10 +348,14 @@ class simple_faucet
 		//if ($this->db->ping())
 		if ($this->status != SF_STATUS_MYSQL_CONNECTION_FAILED)
 			{
-			if ($result = $this->db->query("SELECT ".$this->db->escape_string($function)."(`payout_amount`) FROM `".$this->db->escape_string($this->config["mysql_table_prefix"])."payouts`"))
+			if ($result = $this->db->query("SELECT ".$this->db->escape_string($function)."(`payout_amount`), ".$this->db->escape_string($function)."(`promo_payout_amount`) FROM `".$this->db->escape_string($this->config["mysql_table_prefix"])."payouts`"))
 				{
 				$row = $result->fetch_array(MYSQLI_NUM);
-				return (fmod($row[0],1) !== 0.0) ? number_format($row[0],6) : $row[0];
+				$resultCalc = $row[0];
+				if ("SUM" == $function) {
+					$resultCalc = $row[0]+$row[1];
+				}
+				return (fmod($resultCalc,1) !== 0.0) ? number_format($resultCalc,6) : $resultCalc;
 				}
 			}
 		return false;
