@@ -355,6 +355,9 @@ class simple_faucet
 				if ("SUM" == $function) {
 					$resultCalc = $row[0]+$row[1];
 				}
+				if ("MAX" == $function) {
+					$resultCalc = $row[0]+$row[1];
+				}
 				return (fmod($resultCalc,1) !== 0.0) ? number_format($resultCalc,6) : $resultCalc;
 				}
 			}
