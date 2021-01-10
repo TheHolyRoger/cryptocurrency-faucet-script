@@ -20,4 +20,3 @@ CREATE TABLE `pf_ban_list` (
   UNIQUE KEY `ip_address` (`ip_address`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 */
-?>

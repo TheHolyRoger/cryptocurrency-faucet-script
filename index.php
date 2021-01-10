@@ -8,4 +8,3 @@ if (!isset($config) || !class_exists("jsonRPCClient") || !class_exists("simple_f
 	die("Faucet missing core components and/or config.");
 $simple_faucet = new simple_faucet($config);
 $simple_faucet->render();
-?>

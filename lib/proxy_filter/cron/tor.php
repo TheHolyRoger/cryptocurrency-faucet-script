@@ -12,4 +12,3 @@ if (!empty($tor_list))
 	$tor_list = explode("\n",$tor_list);
 	$pf->add($tor_list,"Tor exit node");
 	}
-?>
